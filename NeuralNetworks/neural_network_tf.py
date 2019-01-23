@@ -10,10 +10,10 @@ n_nodes_hl3 = 500 # Number of nodes of hidden layer 3
 n_classes = 10
 batch_size = 100  
 
-x = tf.placeholder(tf.float32, [None, 784]) # Defines type and shape of tensor
+X = tf.placeholder(tf.float32, [None, 784]) # Defines type and shape of tensor (28px * 28px)
 y = tf.placeholder(tf.float32) # Defines type and shape of tensor
 
-def neural_network_model(data):
+def neural_network_model(X):
     hidden1_layer = {'weights': tf.Variable(tf.random_normal([784, n_nodes_hl1])),
     'biases': tf.Variable(tf.random_normal([n_nodes_hl1]))}
     
@@ -26,7 +26,7 @@ def neural_network_model(data):
     output_layer = {'weights': tf.Variable(tf.random_normal([n_nodes_hl3, n_classes])),
     'biases': tf.Variable(tf.random_normal([n_classes]))}
     
-    l1 = tf.add(tf.matmul(data, hidden1_layer['weights']), hidden1_layer['biases'])
+    l1 = tf.add(tf.matmul(X, hidden1_layer['weights']), hidden1_layer['biases'])
     l1 = tf.nn.relu(l1) # Activation function
 
     l2 = tf.add(tf.matmul(l1, hidden2_layer['weights']), hidden2_layer['biases'])
@@ -39,29 +39,29 @@ def neural_network_model(data):
     
     return output
 
-def train_neural_network(x):
-    pred = neural_network_model(x)
+def train_neural_network(X):
+    pred = neural_network_model(X)
     # Compute the mean of probability error measures in discrete classification
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
     optimizer = tf.train.AdadeltaOptimizer().minimize(cost)
 
-    hm_epochs = 10
+    n_epochs = 10 # Number of cycles (feed foward + backpropagation)
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
-        for epoch in range(hm_epochs):
+        for epoch in range(n_epochs):
             epoch_loss = 0
             for _ in range(int(mnist.train.num_examples / batch_size)):
                 # Get the next batch of entries
-                epoch_x, epoch_y = mnist.train.next_batch(batch_size)
+                epoch_X, epoch_y = mnist.train.next_batch(batch_size)
                 # Train the nn with the batch of entries
-                _, c = sess.run([optimizer, cost], feed_dict={x: epoch_x, y: epoch_y})
+                _, c = sess.run([optimizer, cost], feed_dict={X: epoch_X, y: epoch_y})
                 epoch_loss += c
             
-            print('Epoch', epoch, 'completed out of', hm_epochs, 'loss', epoch_loss)
+            print('Epoch', epoch, 'completed out of', n_epochs, 'loss', epoch_loss)
         
         correct = tf.equal(tf.arg_max(pred, 1), tf.arg_max(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
-        print('Accuracy', accuracy.eval({x:mnist.test.images, y:mnist.test.labels}))
+        print('Accuracy', accuracy.eval({X:mnist.test.images, y:mnist.test.labels}))
 
-train_neural_network(x)
+train_neural_network(X)
