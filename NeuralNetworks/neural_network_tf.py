@@ -3,12 +3,12 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 
-n_nodes_hl1 = 500 # Number of nodes in layer 1
-n_nodes_hl2 = 500 # Number of nodes in layer 2
-n_nodes_hl3 = 500 # Number of nodes in layer 3
+n_nodes_hl1 = 500 # Number of nodes of hidden layer 1
+n_nodes_hl2 = 500 # Number of nodes of hidden layer 2
+n_nodes_hl3 = 500 # Number of nodes of hidden layer 3
 
 n_classes = 10
-batch_size = 100 # Number of interactions
+batch_size = 100  
 
 x = tf.placeholder(tf.float32, [None, 784]) # Defines type and shape of tensor
 y = tf.placeholder(tf.float32) # Defines type and shape of tensor
@@ -52,7 +52,9 @@ def train_neural_network(x):
         for epoch in range(hm_epochs):
             epoch_loss = 0
             for _ in range(int(mnist.train.num_examples / batch_size)):
+                # Get the next batch of entries
                 epoch_x, epoch_y = mnist.train.next_batch(batch_size)
+                # Train the nn with the batch of entries
                 _, c = sess.run([optimizer, cost], feed_dict={x: epoch_x, y: epoch_y})
                 epoch_loss += c
             
