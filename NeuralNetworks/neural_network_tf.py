@@ -58,7 +58,7 @@ def train_neural_network(X):
                 _, c = sess.run([optimizer, cost], feed_dict={X: epoch_X, y: epoch_y})
                 epoch_loss += c
             
-            print('Epoch', epoch, 'completed out of', n_epochs, 'loss', epoch_loss)
+            print('Epoch', epoch + 1, 'completed out of', n_epochs, 'loss', epoch_loss)
         
         correct = tf.equal(tf.arg_max(pred, 1), tf.arg_max(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
