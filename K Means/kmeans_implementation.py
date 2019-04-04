@@ -71,13 +71,11 @@ y = np.array(df['survived'])
 clf = K_means(300, K=2)
 
 clf.fit(X)
-predictions = []
 hits = 0
 for i in range(len(X)):
     x = np.array(X[i].astype(float))
     x = x.reshape(-1, len(x))
     pred = clf.predict(x)
-    predictions.append(pred)
     if pred == y[i]:
         hits += 1
 
