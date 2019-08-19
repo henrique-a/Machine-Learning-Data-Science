@@ -79,4 +79,5 @@ for i in range(len(X)):
     if pred == y[i]:
         hits += 1
 
+performance = hits/len(X)
 print(hits/len(X))
