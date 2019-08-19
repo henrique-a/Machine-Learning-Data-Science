@@ -3,3 +3,5 @@
 *.pyc
 gender_classifier.py
 NeuralNetworks
+*.ipynb_checkpoints
+
