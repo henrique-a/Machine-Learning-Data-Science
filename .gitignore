@@ -1,4 +1,5 @@
 .DS_Store
+*.pickle
 *.picke
 *.pyc
 gender_classifier.py
