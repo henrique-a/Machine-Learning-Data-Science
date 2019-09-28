@@ -4,3 +4,7 @@
 *.pyc
 gender_classifier.py
 *.ipynb_checkpoints
+pytorch_intro.ipynb
+rnn_tf.py
+basic_rnn_tf.py
+NeuralNetworks/MNIST

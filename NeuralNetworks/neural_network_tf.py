@@ -27,13 +27,13 @@ def neural_network_model(X):
     'biases': tf.Variable(tf.random_normal([n_classes]))}
     
     l1 = tf.add(tf.matmul(X, hidden1_layer['weights']), hidden1_layer['biases'])
-    l1 = tf.nn.relu(l1) # Activation function
+    l1 = tf.nn.relu(l1) # Activation function of layer 1
 
     l2 = tf.add(tf.matmul(l1, hidden2_layer['weights']), hidden2_layer['biases'])
-    l2 = tf.nn.relu(l2) # Activation function
+    l2 = tf.nn.relu(l2) # Activation function of layer 2
 
     l3 = tf.add(tf.matmul(l2, hidden3_layer['weights']), hidden3_layer['biases'])
-    l3 = tf.nn.relu(l3) # Activation function
+    l3 = tf.nn.relu(l3) # Activation function of layer 3
 
     output = tf.add(tf.matmul(l3, output_layer['weights']), output_layer['biases'])
     
@@ -41,9 +41,9 @@ def neural_network_model(X):
 
 def train_neural_network(X):
     pred = neural_network_model(X)
-    # Compute the mean of probability error measures in discrete classification
-    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
-    optimizer = tf.train.AdadeltaOptimizer().minimize(cost)
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=pred, labels=y)) # Compute softmax cross-entropy cost
+
+    optimizer = tf.train.AdamOptimizer().minimize(cost) # Default learning rate = 0.001
 
     n_epochs = 10 # Number of cycles (feed foward + backpropagation)
 
@@ -52,15 +52,13 @@ def train_neural_network(X):
         for epoch in range(n_epochs):
             epoch_loss = 0
             for _ in range(int(mnist.train.num_examples / batch_size)):
-                # Get the next batch of entries
-                epoch_X, epoch_y = mnist.train.next_batch(batch_size)
-                # Train the nn with the batch of entries
-                _, c = sess.run([optimizer, cost], feed_dict={X: epoch_X, y: epoch_y})
+                epoch_X, epoch_y = mnist.train.next_batch(batch_size) # Get the next batch of entries
+                _, c = sess.run([optimizer, cost], feed_dict={X: epoch_X, y: epoch_y}) # Train the nn with the batch of entries
                 epoch_loss += c
             
             print('Epoch', epoch + 1, 'completed out of', n_epochs, 'loss', epoch_loss)
         
-        correct = tf.equal(tf.arg_max(pred, 1), tf.arg_max(y, 1))
+        correct = tf.equal(tf.math.argmax(pred, 1), tf.math.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
         print('Accuracy', accuracy.eval({X:mnist.test.images, y:mnist.test.labels}))
 
