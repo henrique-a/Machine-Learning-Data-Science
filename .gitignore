@@ -8,3 +8,4 @@ pytorch_intro.ipynb
 rnn_tf.py
 basic_rnn_tf.py
 NeuralNetworks/MNIST
+*.nosync
